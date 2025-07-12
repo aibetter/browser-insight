@@ -1,10 +1,10 @@
-import { defineConfig } from 'wxt';
+import { defineConfig } from 'wxt'
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   srcDir: 'src',
   modules: ['@wxt-dev/module-vue'],
   manifest: {
-    name:'Insight'
-  }
-});
+    name: 'Insight',
+  },
+})
