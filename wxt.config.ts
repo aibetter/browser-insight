@@ -8,6 +8,9 @@ export default defineConfig({
   vite: () => ({
     plugins: [tailwindcss()],
   }),
+  imports: {
+    presets: ['@vueuse/core'],
+  },
   manifest: {
     name: 'Insight',
   },
