@@ -523,11 +523,11 @@ watch([searchKey, searchConfig], ([newValue]) => {
 
 // 8. Keyboard shortcuts
 function handleKeydown(event: KeyboardEvent) {
-  event.preventDefault()
   event.stopPropagation()
 
   if (event.key === 'Enter') {
     event.preventDefault()
+
     if (event.shiftKey) {
       navigateToPrevious()
     }
