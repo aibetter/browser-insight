@@ -32,7 +32,8 @@ watch(isVisible, async (visible) => {
 
 // Global keyboard event listener for search toggle
 useEventListener('keydown', (e) => {
-  if (e.key === 'f' && e.metaKey) {
+  // Support both Cmd (Mac) and Ctrl (Windows/Linux) for Ctrl+F
+  if (e.key === 'f' && (e.metaKey || e.ctrlKey)) {
     e.preventDefault()
     isVisible.value = true
   }
@@ -549,7 +550,9 @@ function handleKeydown(event: KeyboardEvent) {
     <!-- Search input section -->
     <div class="flex items-center gap-3 p-4">
       <div class="flex-1 relative">
-        <i class="icon-[material-symbols--search-rounded] absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+        <i
+          class="icon-[material-symbols--search-rounded] absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"
+        />
         <input
           ref="input"
           v-model="searchKey"
@@ -563,7 +566,8 @@ function handleKeydown(event: KeyboardEvent) {
       <div class="flex items-center gap-1 px-2 py-1 bg-gray-50 rounded-lg border border-gray-200">
         <!-- Case sensitive toggle -->
         <button
-          class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group cursor-pointer" :class="[
+          class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group cursor-pointer"
+          :class="[
             searchConfig.caseSensitive
               ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg'
               : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800',
@@ -572,12 +576,16 @@ function handleKeydown(event: KeyboardEvent) {
           @click="searchConfig.caseSensitive = !searchConfig.caseSensitive"
         >
           <i class="icon-[material-symbols--match-case-rounded] text-sm" />
-          <div v-if="searchConfig.caseSensitive" class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white" />
+          <div
+            v-if="searchConfig.caseSensitive"
+            class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white"
+          />
         </button>
 
         <!-- Whole word toggle -->
         <button
-          class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group" :class="[
+          class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group"
+          :class="[
             searchConfig.wholeWord && !searchConfig.useRegex
               ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg cursor-pointer'
               : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800 cursor-pointer',
@@ -588,12 +596,16 @@ function handleKeydown(event: KeyboardEvent) {
           @click="!searchConfig.useRegex && (searchConfig.wholeWord = !searchConfig.wholeWord)"
         >
           <i class="icon-[material-symbols--match-word-rounded] text-sm" />
-          <div v-if="searchConfig.wholeWord && !searchConfig.useRegex" class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white" />
+          <div
+            v-if="searchConfig.wholeWord && !searchConfig.useRegex"
+            class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white"
+          />
         </button>
 
         <!-- Regex toggle -->
         <button
-          class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group cursor-pointer" :class="[
+          class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group cursor-pointer"
+          :class="[
             searchConfig.useRegex
               ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg'
               : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800',
@@ -602,7 +614,10 @@ function handleKeydown(event: KeyboardEvent) {
           @click="searchConfig.useRegex = !searchConfig.useRegex"
         >
           <i class="icon-[material-symbols--regular-expression-rounded] text-sm" />
-          <div v-if="searchConfig.useRegex" class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white" />
+          <div
+            v-if="searchConfig.useRegex"
+            class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white"
+          />
         </button>
       </div>
 
