@@ -1,0 +1,20 @@
+---
+description: When modifying the corresponding code
+alwaysApply: false
+---
+
+This rule provides coding standards
+
+## For vue file
+
+1. all vue-related APIs do not need to be introduced because **auto-import**
+2. all responsive data should be defined using **ref** first, and **reactive** should not be used as much as possible.
+3. prefer **useTemplateRef** to reference templates
+
+## For html
+
+1. should fully consider and set up **accessibility** related information
+
+## For css file or css in html
+
+1. all **clickable** elements should reflect style changes when hovering, and the cursor style should be **pointer** 

@@ -1,0 +1,10 @@
+---
+alwaysApply: true
+---
+
+This rule provides project architecture:
+
+1. the project aims to develop a browser extension to insight web page content
+2. use [wxt](https://wxt.dev/) as the project framework and [vue](https://vuejs.org/) to draw UI
+3. use [tailwindcss](https://tailwindcss.com/) to write style
+4. use [iconify](https://iconify.design/) as icon library
