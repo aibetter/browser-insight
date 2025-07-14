@@ -6,6 +6,9 @@ defineOptions({
 const { enable: searchEnabled } = useSearch()
 
 const isVisible = ref(false)
+useEventListener(window, CUSTOM_EVENT_KEYS.SEARCH_OPEN, (e: CustomEvent) => {
+  isVisible.value = e.detail?.action === 'open'
+})
 
 const searchKey = ref('')
 const searchConfig = reactive({
@@ -33,34 +36,21 @@ watch(isVisible, async (visible) => {
   }
 })
 
-// Global keyboard event listener for search toggle
+// // Global keyboard event listener for search toggle
 useEventListener('keydown', (e) => {
   // Only handle keyboard shortcuts if search is enabled
   if (!searchEnabled.value)
     return
 
-  // Support both Cmd (Mac) and Ctrl (Windows/Linux) for Ctrl+F
-  if (e.key === 'f' && (e.metaKey || e.ctrlKey)) {
-    e.preventDefault()
-    isVisible.value = true
-  }
-  else if (e.key === 'Escape') {
+  if (e.key === 'Escape') {
     isVisible.value = false
   }
 })
 
-// Listen for custom search toggle events
-let customEventHandler: () => void
 let cacheRebuildTimer: NodeJS.Timeout | null = null
 
 onMounted(() => {
   buildTextNodesCache()
-
-  // Add custom event listener
-  customEventHandler = () => {
-    isVisible.value = !isVisible.value
-  }
-  window.addEventListener('insight-search-toggle', customEventHandler)
 })
 
 onUnmounted(() => {
@@ -68,11 +58,6 @@ onUnmounted(() => {
     clearTimeout(cacheRebuildTimer)
 
   clearHighlights()
-
-  // Remove custom event listener
-  if (customEventHandler) {
-    window.removeEventListener('insight-search-toggle', customEventHandler)
-  }
 
   // Remove dynamically added styles
   const styleElement = document.querySelector('#insight-search-styles')

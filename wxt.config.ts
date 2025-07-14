@@ -13,6 +13,16 @@ export default defineConfig({
   },
   manifest: {
     name: 'Insight',
-    permissions: ['storage'],
+    permissions: ['storage', 'tabs'],
+    commands: {
+      'search:open': {
+        suggested_key: {
+          mac: 'Alt+Shift+F',
+          windows: 'Alt+Shift+F',
+          default: 'Alt+Shift+F',
+        },
+        description: 'Open search in current tab',
+      },
+    },
   },
 })

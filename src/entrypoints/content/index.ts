@@ -1,3 +1,4 @@
+import { MODULES } from '#imports'
 import { createApp } from 'vue'
 import App from './App.vue'
 import '@/assets/tailwind.css'
@@ -21,5 +22,19 @@ export default defineContentScript({
     })
 
     ui.mount()
+
+    browser.runtime.onMessage.addListener((message, _, sendResponse) => {
+      switch (message.type) {
+        case MODULES.SEARCH: {
+          const event = new CustomEvent(CUSTOM_EVENT_KEYS.SEARCH_OPEN, {
+            detail: { action: message.action },
+          })
+          window.dispatchEvent(event)
+
+          sendResponse({ success: true })
+          break
+        }
+      }
+    })
   },
 })
