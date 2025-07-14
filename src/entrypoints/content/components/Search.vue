@@ -3,8 +3,11 @@ defineOptions({
   name: 'InsightContentSearch',
 })
 
-const searchKey = ref('')
+const { enable: searchEnabled } = useSearch()
+
 const isVisible = ref(false)
+
+const searchKey = ref('')
 const searchConfig = reactive({
   caseSensitive: false,
   wholeWord: false,
@@ -32,6 +35,10 @@ watch(isVisible, async (visible) => {
 
 // Global keyboard event listener for search toggle
 useEventListener('keydown', (e) => {
+  // Only handle keyboard shortcuts if search is enabled
+  if (!searchEnabled.value)
+    return
+
   // Support both Cmd (Mac) and Ctrl (Windows/Linux) for Ctrl+F
   if (e.key === 'f' && (e.metaKey || e.ctrlKey)) {
     e.preventDefault()
@@ -543,7 +550,7 @@ function handleKeydown(event: KeyboardEvent) {
 
 <template>
   <div
-    v-if="isVisible"
+    v-if="isVisible && searchEnabled"
     class="fixed top-4 left-1/2 transform -translate-x-1/2 z-[999999] bg-white/95 backdrop-blur-md text-neutral-950 rounded-xl shadow-2xl border border-gray-200 transition-all duration-300 ease-in-out"
     style="min-width: 320px; max-width: 90vw;"
   >

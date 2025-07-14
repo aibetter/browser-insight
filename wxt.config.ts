@@ -13,5 +13,6 @@ export default defineConfig({
   },
   manifest: {
     name: 'Insight',
+    permissions: ['storage'],
   },
 })
