@@ -537,136 +537,124 @@ function handleKeydown(event: KeyboardEvent) {
   <div
     v-if="isVisible && searchEnabled"
     class="fixed top-4 left-1/2 transform -translate-x-1/2 z-[999999] bg-white/95 backdrop-blur-md text-neutral-950 rounded-xl shadow-2xl border border-gray-200 transition-all duration-300 ease-in-out"
-    style="min-width: 320px; max-width: 90vw;"
+    style="min-width: 400px; max-width: 90vw;"
   >
-    <!-- Search input section -->
-    <div class="flex flex-col lg:flex-row lg:items-center gap-3 p-4">
-      <!-- Input and close button row -->
-      <div class="flex items-center gap-3 flex-1">
-        <div class="flex-1 relative">
-          <i
-            class="icon-[material-symbols--search-rounded] absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"
-          />
-          <input
-            ref="input"
-            v-model="searchKey"
-            placeholder="Search everything in page"
-            class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            @keydown="handleKeydown"
-          >
-        </div>
-
-        <!-- Close button - always visible on mobile -->
-        <button
-          class="lg:hidden size-8 rounded-md flex items-center justify-center hover:bg-red-50 hover:text-red-600 transition-all duration-200 text-gray-500 cursor-pointer"
-          title="Close (Escape)"
-          @click="isVisible = false"
+    <!-- First row: Search input -->
+    <div class="flex items-center gap-3 p-4 pb-2">
+      <div class="flex-1 relative">
+        <i
+          class="icon-[material-symbols--search-rounded] absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"
+        />
+        <input
+          ref="input"
+          v-model="searchKey"
+          placeholder="Search everything in page"
+          class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          @keydown="handleKeydown"
         >
-          <i class="icon-[material-symbols--close-rounded] text-lg" />
+      </div>
+
+      <!-- Close button -->
+      <button
+        class="size-8 rounded-md flex items-center justify-center hover:bg-red-50 hover:text-red-600 transition-all duration-200 text-gray-500 cursor-pointer"
+        title="Close (Escape)"
+        @click="isVisible = false"
+      >
+        <i class="icon-[material-symbols--close-rounded] text-lg" />
+      </button>
+    </div>
+
+    <!-- Second row: Actions -->
+    <div class="flex items-center justify-between gap-3 px-4 pb-4">
+      <!-- Search options with icons -->
+      <div class="flex items-center gap-1 px-2 py-1 bg-gray-50 rounded-lg border border-gray-200">
+        <!-- Case sensitive toggle -->
+        <button
+          class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group cursor-pointer"
+          :class="[
+            searchConfig.caseSensitive
+              ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg'
+              : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800',
+          ]"
+          :title="searchConfig.caseSensitive ? 'Case sensitive (enabled)' : 'Case sensitive (disabled)'"
+          @click="searchConfig.caseSensitive = !searchConfig.caseSensitive"
+        >
+          <i class="icon-[material-symbols--match-case-rounded] text-sm" />
+          <div
+            v-if="searchConfig.caseSensitive"
+            class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white"
+          />
+        </button>
+
+        <!-- Whole word toggle -->
+        <button
+          class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group"
+          :class="[
+            searchConfig.wholeWord && !searchConfig.useRegex
+              ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg cursor-pointer'
+              : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800 cursor-pointer',
+            searchConfig.useRegex ? 'opacity-40 cursor-not-allowed' : '',
+          ]"
+          :title="searchConfig.wholeWord ? 'Whole word (enabled)' : 'Whole word (disabled)'"
+          :disabled="searchConfig.useRegex"
+          @click="!searchConfig.useRegex && (searchConfig.wholeWord = !searchConfig.wholeWord)"
+        >
+          <i class="icon-[material-symbols--match-word-rounded] text-sm" />
+          <div
+            v-if="searchConfig.wholeWord && !searchConfig.useRegex"
+            class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white"
+          />
+        </button>
+
+        <!-- Regex toggle -->
+        <button
+          class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group cursor-pointer"
+          :class="[
+            searchConfig.useRegex
+              ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg'
+              : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800',
+          ]"
+          :title="searchConfig.useRegex ? 'Regex (enabled)' : 'Regex (disabled)'"
+          @click="searchConfig.useRegex = !searchConfig.useRegex"
+        >
+          <i class="icon-[material-symbols--regular-expression-rounded] text-sm" />
+          <div
+            v-if="searchConfig.useRegex"
+            class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white"
+          />
         </button>
       </div>
 
-      <!-- Controls row - wraps on mobile -->
-      <div class="flex flex-col sm:flex-row gap-2 lg:gap-3">
-        <!-- Search options with icons -->
-        <div class="flex items-center justify-center gap-1 px-2 py-1 bg-gray-50 rounded-lg border border-gray-200">
-          <!-- Case sensitive toggle -->
-          <button
-            class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group cursor-pointer"
-            :class="[
-              searchConfig.caseSensitive
-                ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg'
-                : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800',
-            ]"
-            :title="searchConfig.caseSensitive ? 'Case sensitive (enabled)' : 'Case sensitive (disabled)'"
-            @click="searchConfig.caseSensitive = !searchConfig.caseSensitive"
-          >
-            <i class="icon-[material-symbols--match-case-rounded] text-sm" />
-            <div
-              v-if="searchConfig.caseSensitive"
-              class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white"
-            />
-          </button>
-
-          <!-- Whole word toggle -->
-          <button
-            class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group"
-            :class="[
-              searchConfig.wholeWord && !searchConfig.useRegex
-                ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg cursor-pointer'
-                : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800 cursor-pointer',
-              searchConfig.useRegex ? 'opacity-40 cursor-not-allowed' : '',
-            ]"
-            :title="searchConfig.wholeWord ? 'Whole word (enabled)' : 'Whole word (disabled)'"
-            :disabled="searchConfig.useRegex"
-            @click="!searchConfig.useRegex && (searchConfig.wholeWord = !searchConfig.wholeWord)"
-          >
-            <i class="icon-[material-symbols--match-word-rounded] text-sm" />
-            <div
-              v-if="searchConfig.wholeWord && !searchConfig.useRegex"
-              class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white"
-            />
-          </button>
-
-          <!-- Regex toggle -->
-          <button
-            class="size-7 rounded-md flex items-center justify-center transition-all duration-200 relative group cursor-pointer"
-            :class="[
-              searchConfig.useRegex
-                ? 'bg-blue-500 text-white shadow-md hover:bg-blue-600 hover:shadow-lg'
-                : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800',
-            ]"
-            :title="searchConfig.useRegex ? 'Regex (enabled)' : 'Regex (disabled)'"
-            @click="searchConfig.useRegex = !searchConfig.useRegex"
-          >
-            <i class="icon-[material-symbols--regular-expression-rounded] text-sm" />
-            <div
-              v-if="searchConfig.useRegex"
-              class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white"
-            />
-          </button>
-        </div>
-
-        <!-- Navigation and counter -->
-        <div class="flex items-center gap-1 px-2 py-1 bg-gray-50 rounded-lg border border-gray-200">
-          <span class="text-sm text-gray-600 font-medium px-2 whitespace-nowrap">
-            {{ matches.length > 0 ? `${currentIndex}/${matches.length}` : '0/0' }}
-          </span>
-          <div class="w-px h-4 bg-gray-300" />
-          <button
-            class="size-7 rounded-md flex items-center justify-center transition-all duration-200" :class="[
-              matches.length === 0
-                ? 'opacity-40 cursor-not-allowed text-gray-400'
-                : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800 cursor-pointer',
-            ]"
-            :disabled="matches.length === 0"
-            title="Previous match (Shift+Enter)"
-            @click="navigateToPrevious"
-          >
-            <i class="icon-[material-symbols--keyboard-arrow-up-rounded] text-lg" />
-          </button>
-          <button
-            class="size-7 rounded-md flex items-center justify-center transition-all duration-200" :class="[
-              matches.length === 0
-                ? 'opacity-40 cursor-not-allowed text-gray-400'
-                : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800 cursor-pointer',
-            ]"
-            :disabled="matches.length === 0"
-            title="Next match (Enter)"
-            @click="navigateToNext"
-          >
-            <i class="icon-[material-symbols--keyboard-arrow-down-rounded] text-lg" />
-          </button>
-          <div class="w-px h-4 bg-gray-300 hidden lg:block" />
-          <!-- Close button - hidden on mobile, shown on desktop -->
-          <button
-            class="hidden lg:flex size-7 rounded-md items-center justify-center hover:bg-red-50 hover:text-red-600 transition-all duration-200 text-gray-500 cursor-pointer"
-            title="Close (Escape)"
-            @click="isVisible = false"
-          >
-            <i class="icon-[material-symbols--close-rounded] text-lg" />
-          </button>
-        </div>
+      <!-- Navigation and counter -->
+      <div class="flex items-center gap-1 px-2 py-1 bg-gray-50 rounded-lg border border-gray-200">
+        <span class="text-sm text-gray-600 font-medium px-2 whitespace-nowrap">
+          {{ matches.length > 0 ? `${currentIndex}/${matches.length}` : '0/0' }}
+        </span>
+        <div class="w-px h-4 bg-gray-300" />
+        <button
+          class="size-7 rounded-md flex items-center justify-center transition-all duration-200" :class="[
+            matches.length === 0
+              ? 'opacity-40 cursor-not-allowed text-gray-400'
+              : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800 cursor-pointer',
+          ]"
+          :disabled="matches.length === 0"
+          title="Previous match (Shift+Enter)"
+          @click="navigateToPrevious"
+        >
+          <i class="icon-[material-symbols--keyboard-arrow-up-rounded] text-lg" />
+        </button>
+        <button
+          class="size-7 rounded-md flex items-center justify-center transition-all duration-200" :class="[
+            matches.length === 0
+              ? 'opacity-40 cursor-not-allowed text-gray-400'
+              : 'hover:bg-white hover:shadow-sm text-gray-600 hover:text-gray-800 cursor-pointer',
+          ]"
+          :disabled="matches.length === 0"
+          title="Next match (Enter)"
+          @click="navigateToNext"
+        >
+          <i class="icon-[material-symbols--keyboard-arrow-down-rounded] text-lg" />
+        </button>
       </div>
     </div>
   </div>
