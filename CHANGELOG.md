@@ -1,7 +1,7 @@
 # Changelog
 
 
-## v0.0.0
+## v0.1.0
 
 
 ### 🚀 Enhancements
@@ -28,6 +28,7 @@
 - Update basic info ([49f0a04](https://github.com/aibetter/browser-insight/commit/49f0a04))
 - Init cursor rules ([3a121e4](https://github.com/aibetter/browser-insight/commit/3a121e4))
 - Update logo ([da10340](https://github.com/aibetter/browser-insight/commit/da10340))
+- **popup:** Update shortcut key ([c41f5c1](https://github.com/aibetter/browser-insight/commit/c41f5c1))
 
 ### 🎨 Styles
 
@@ -36,6 +37,7 @@
 ### 🤖 CI
 
 - **git-hook:** Add format ([7159afd](https://github.com/aibetter/browser-insight/commit/7159afd))
+- Add changelog and release auto-generate ([84e81e4](https://github.com/aibetter/browser-insight/commit/84e81e4))
 
 ### ❤️ Contributors
 
