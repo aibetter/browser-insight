@@ -66,7 +66,7 @@ function toggleSearch() {
             </div>
 
             <p class="text-xs text-gray-500">
-              {{ searchEnabled ? 'Press Cmd/Ctrl + F' : 'Click to enable' }}
+              {{ searchEnabled ? 'Press Alt + Shift + F' : 'Click to enable' }}
             </p>
           </div>
         </div>
